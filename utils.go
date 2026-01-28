@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func exePath() (string, error) {
+func getExePath() (string, error) {
 	prog := os.Args[0]
 	p, err := filepath.Abs(prog)
 	if err != nil {
@@ -30,4 +30,19 @@ func exePath() (string, error) {
 		}
 	}
 	return "", err
+}
+
+func copyFile(originPath, copyPath string) error {
+	var data []byte
+	var err error
+
+	if data, err = os.ReadFile(originPath); err != nil {
+		return err
+	}
+
+	if err = os.WriteFile(copyPath, data, 0644); err != nil {
+		return err
+	}
+
+	return nil
 }
