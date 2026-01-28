@@ -24,7 +24,7 @@ type configuration struct {
 }
 
 type importPath struct {
-	string `xml:"path,attr"`
+	Path string `xml:"path,attr"`
 }
 
 func (conf *configuration) save(path string) {

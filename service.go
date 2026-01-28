@@ -23,12 +23,12 @@ loop:
 		select {
 		case <-tick:
 			for _, importPath := range config.ImportPaths {
-				if _, err := os.Stat(importPath.string); err == nil {
+				if _, err := os.Stat(importPath.Path); err == nil {
 					var data []byte
 
-					data, err = os.ReadFile(importPath.string)
+					data, err = os.ReadFile(importPath.Path)
 					if err != nil {
-						logger.Error("При чтении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", importPath.string))
+						logger.Error("При чтении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", importPath.Path))
 						continue
 					}
 
@@ -50,7 +50,7 @@ loop:
 					text = strings.Join(rows, "\n")
 					data = []byte(text)
 
-					var exportFilePath = path.Join(path.Dir(importPath.string), "export.txt")
+					var exportFilePath = path.Join(path.Dir(importPath.Path), "export.txt")
 
 					err = os.WriteFile(exportFilePath, data, 0644)
 					if err != nil {
@@ -58,17 +58,17 @@ loop:
 						continue
 					}
 
-					err = os.Remove(importPath.string)
+					err = os.Remove(importPath.Path)
 					if err != nil {
-						logger.Error("При удалении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", importPath.string))
+						logger.Error("При удалении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", importPath.Path))
 						continue
 					}
 					logger.Error("Отчет конвертирован и оригинал удален",
-						zap.String("original", importPath.string), zap.String("converted", exportFilePath))
+						zap.String("original", importPath.Path), zap.String("converted", exportFilePath))
 				} else if errors.Is(err, os.ErrNotExist) {
-					logger.Error("Конвертация пропущена: отсутствует файл", zap.String("path", importPath.string))
+					logger.Error("Конвертация пропущена: отсутствует файл", zap.String("path", importPath.Path))
 				} else {
-					logger.Error("Конвертация пропущена: получена ошибка", zap.Error(err), zap.String("path", importPath.string))
+					logger.Error("Конвертация пропущена: получена ошибка", zap.Error(err), zap.String("path", importPath.Path))
 				}
 			}
 		case c := <-r:
