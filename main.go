@@ -154,7 +154,7 @@ func main() {
 				return
 			case "3":
 				var _path = path.Join(os.Getenv("WINDIR"), "notepad.exe")
-				err = exec.Command(_path, path.Join(pathWorkdir, "config.json")).Run()
+				err = exec.Command(_path, path.Join(pathWorkdir, confFileName)).Run()
 				if err != nil {
 					logger.Error("Не удалось открыть файл конфигурации.", zap.Error(err))
 					fmt.Println("Не удалось открыть файл конфигурации.")

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"encoding/xml"
 	"os"
 	"time"
 
@@ -10,14 +10,16 @@ import (
 
 var config *configuration
 
+const confFileName = "config.xml"
+
 type configuration struct {
-	Interval time.Duration `json:"interval"`
-	Paths    []filePath    `json:"paths"`
+	Interval time.Duration `xml:"interval"`
+	Paths    []filePath    `xml:"paths>path"`
 }
 
 type filePath struct {
-	Import string `json:"import"`
-	Export string `json:"export"`
+	Import string `xml:"import"`
+	Export string `xml:"export"`
 }
 
 func (conf *configuration) save(path string) {
@@ -30,9 +32,9 @@ func (conf *configuration) save(path string) {
 		panic(err)
 	}
 	defer file.Close()
-	err = json.NewEncoder(file).Encode(&config)
+	err = xml.NewEncoder(file).Encode(&config)
 	if err != nil {
-		logger.Error("При переводе конфигурации в JSON произошла ошибка!", zap.Error(err))
+		logger.Error("При переводе конфигурации в XML произошла ошибка!", zap.Error(err))
 		panic(err)
 	}
 }

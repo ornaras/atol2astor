@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"encoding/xml"
 	"flag"
 	"os"
 	"path"
@@ -52,7 +52,7 @@ func initFlags() {
 }
 
 func initConfig() {
-	var _path = path.Join(pathWorkdir, "config.json")
+	var _path = path.Join(pathWorkdir, confFileName)
 	var err error
 	var file *os.File
 	if _, err = os.Stat(_path); os.IsNotExist(err) {
@@ -65,9 +65,9 @@ func initConfig() {
 			panic(err)
 		}
 		defer file.Close()
-		err = json.NewDecoder(file).Decode(&config)
+		err = xml.NewDecoder(file).Decode(&config)
 		if err != nil {
-			logger.Error("При переводе JSON в конфигурацию произошла ошибка!", zap.Error(err))
+			logger.Error("При переводе XML в конфигурацию произошла ошибка!", zap.Error(err))
 			panic(err)
 		}
 	}
