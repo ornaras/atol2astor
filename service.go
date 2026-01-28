@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"os"
-	"path"
 	"strings"
 	"time"
 
@@ -50,7 +49,10 @@ loop:
 					text = strings.Join(rows, "\n")
 					data = []byte(text)
 
-					var exportFilePath = path.Join(path.Dir(importPath.Path), "export.txt")
+					var pathItems = strings.Split(importPath.Path, string(os.PathSeparator))
+					pathItems[len(pathItems)-1] = "export.txt"
+
+					var exportFilePath = strings.Join(pathItems, string(os.PathSeparator))
 
 					err = os.WriteFile(exportFilePath, data, 0644)
 					if err != nil {
