@@ -1,6 +1,6 @@
 # ATOL-TO-ASTOR
 
-Автоматический конвертер экспорта Frontol 6 из формата Atol в формат ASTOR
+Автоматический конвертер отчета Frontol 6 из формата Atol в формат ASTOR
 
 ![Затраченное время](https://waka.ornaras.ru/api/badge/ornaras/interval:week/project:atol2astor)
 ![Поддерживаемые ОС](https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0-Windows_7%2B-blue?logo=windows)
@@ -24,31 +24,28 @@ Usage of atol2astor.exe:
 > Место расположения каталога с файлами приложения: `%PROGRAMDATA%\atol2astor`
 
 ```xml
-<!--C:\ProgramData\atol2astor\config.xml-->
-
 <configuration>
     <!--Тег 'interval' устанавливает интервал между проверками файлов в минутах-->
     <interval>5</interval>
-    <!--В теге 'imports' хранятся пути к файлам, которые будут конвертироваться в формат ASTOR-->
-    <!--Конвертированный файл сохраняется в той же директории, в которой находится оригинальный файл, с имененем 'export.txt'-->
+    <!--В теге 'reports' хранятся пути к файлам конвертации-->
     <!--Внимание! Не рекомендуется использовать несколько раз одну и ту же директорию.-->
-    <!--Внимание! Оригинальный файл должен иметь имя отличное от 'export.txt'.-->
-    <imports>
-        <import path="C:\atol1\import.txt"/>
-        <import path="C:\atol2\import.txt"/>
-    </imports>
+    <reports>
+        <report import="C:\atol1\import.txt" export="C:\atol1\export.txt"/>
+        <report import="C:\atol2\import.txt" export="C:\atol2\export.txt"/>
+    </reports>
 </configuration>
 ```
 
 ## Порядок установки
 1) Скачать [последнюю версию](https://github.com/ornaras/atol2astor/releases/latest)
-2) Запустить от имени админстратора
+2) Запустить от имени администратора
 3) В меню выбрать первый пункт:
    ```batch
    Возможные действия:
    1) Установка службы
    2) Удаление службы
    3) Открыть конфигурацию
+   4) Перейти в режим конфигуратора
    
    Номер действия: 1
    ```

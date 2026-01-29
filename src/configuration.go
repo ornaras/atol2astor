@@ -61,7 +61,7 @@ func createDefaultConfiguration() *configuration {
 	return &configuration{
 		IntervalComment:    "Тег 'interval' устанавливает интервал между проверками файлов в минутах",
 		Interval:           5,
-		ImportPathsComment: "В теге 'reports' хранятся пути к файлам, которые будут конвертироваться в формат ASTOR",
+		ImportPathsComment: "В теге 'reports' хранятся пути к файлам конвертации",
 		Warning1:           "Внимание! Не рекомендуется использовать несколько раз одну и ту же директорию.",
 		Paths: []*reportPath{
 			{"C:\\atol1\\import.txt", "C:\\atol1\\export.txt"},
