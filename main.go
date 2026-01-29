@@ -9,7 +9,9 @@ import (
 	"golang.org/x/sys/windows/svc/debug"
 )
 
-const nameService = "atol2astor"
+const (
+	nameService = "atol2astor"
+)
 
 var (
 	logger      *zap.Logger
@@ -17,6 +19,8 @@ var (
 
 	isService bool
 	isDebug   bool
+
+	version string
 )
 
 func init() {

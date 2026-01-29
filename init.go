@@ -44,6 +44,7 @@ func initLogger() {
 	)
 
 	logger = zap.New(core)
+	logger.Info("Инициализация atol2astor " + version)
 }
 
 func initFlags() {
