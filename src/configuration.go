@@ -9,7 +9,10 @@ import (
 	"go.uber.org/zap"
 )
 
-var config *configuration
+var (
+	config     *configuration
+	pathConfig string
+)
 
 const confFileName = "config.xml"
 
@@ -19,19 +22,19 @@ type configuration struct {
 	ImportPathsComment string        `xml:",comment"`
 	ExportPathsComment string        `xml:",comment"`
 	Warning1           string        `xml:",comment"`
-	Warning2           string        `xml:",comment"`
-	ImportPaths        []*importPath `xml:"imports>import"`
+	Paths              []*reportPath `xml:"reports>report"`
 }
 
-type importPath struct {
-	Path string `xml:"path,attr"`
+type reportPath struct {
+	Import string `xml:"import,attr"`
+	Export string `xml:"export,attr"`
 }
 
-func (conf *configuration) save(path string) {
+func (conf *configuration) save() {
 	var err error
 	var file *os.File
 
-	file, err = os.Create(path)
+	file, err = os.OpenFile(pathConfig, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		logger.Error("При создании файла конфигурации произошла ошибка!", zap.Error(err))
 		panic(err)
@@ -46,7 +49,7 @@ func (conf *configuration) save(path string) {
 		logger.Error("При переводе конфигурации в XML произошла ошибка!", zap.Error(err))
 		panic(err)
 	}
-	var b = bytes.Replace(buff.Bytes(), []byte("></import>"), []byte("/>"), -1)
+	var b = bytes.Replace(buff.Bytes(), []byte("></report>"), []byte("/>"), -1)
 
 	if _, err = file.Write(b); err != nil {
 		logger.Error("При сохранении конфигурации произошла ошибка!", zap.Error(err))
@@ -58,13 +61,11 @@ func createDefaultConfiguration() *configuration {
 	return &configuration{
 		IntervalComment:    "Тег 'interval' устанавливает интервал между проверками файлов в минутах",
 		Interval:           5,
-		ImportPathsComment: "В теге 'imports' хранятся пути к файлам, которые будут конвертироваться в формат ASTOR",
-		ExportPathsComment: "Конвертированный файл сохраняется в той же директории, в которой находится оригинальный файл, с имененем 'export.txt'",
+		ImportPathsComment: "В теге 'reports' хранятся пути к файлам, которые будут конвертироваться в формат ASTOR",
 		Warning1:           "Внимание! Не рекомендуется использовать несколько раз одну и ту же директорию.",
-		Warning2:           "Внимание! Оригинальный файл должен иметь имя отличное от 'export.txt'.",
-		ImportPaths: []*importPath{
-			{"C:\\atol1\\import.txt"},
-			{"C:\\atol2\\import.txt"},
+		Paths: []*reportPath{
+			{"C:\\atol1\\import.txt", "C:\\atol1\\export.txt"},
+			{"C:\\atol2\\import.txt", "C:\\atol2\\export.txt"},
 		},
 	}
 }

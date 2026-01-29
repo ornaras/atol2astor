@@ -20,6 +20,7 @@ func initWorkdir() {
 			panic(err)
 		}
 	}
+	pathConfig = path.Join(pathWorkdir, confFileName)
 }
 
 func initLogger() {
@@ -53,12 +54,11 @@ func initFlags() {
 }
 
 func initConfig() {
-	var _path = path.Join(pathWorkdir, confFileName)
 	var err error
 	var file *os.File
-	if _, err = os.Stat(_path); os.IsNotExist(err) {
+	if _, err = os.Stat(pathConfig); os.IsNotExist(err) {
 		config = createDefaultConfiguration()
-		config.save(_path)
+		config.save()
 	} else {
 		file, err = os.Open(_path)
 		if err != nil {

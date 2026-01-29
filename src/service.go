@@ -21,13 +21,13 @@ loop:
 	for {
 		select {
 		case <-tick:
-			for _, importPath := range config.ImportPaths {
-				if _, err := os.Stat(importPath.Path); err == nil {
+			for _, paths := range config.Paths {
+				if _, err := os.Stat(paths.Import); err == nil {
 					var data []byte
 
-					data, err = os.ReadFile(importPath.Path)
+					data, err = os.ReadFile(paths.Import)
 					if err != nil {
-						logger.Error("При чтении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", importPath.Path))
+						logger.Error("При чтении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", paths.Import))
 						continue
 					}
 
@@ -49,28 +49,23 @@ loop:
 					text = strings.Join(rows, "\n")
 					data = []byte(text)
 
-					var pathItems = strings.Split(importPath.Path, string(os.PathSeparator))
-					pathItems[len(pathItems)-1] = "export.txt"
-
-					var exportFilePath = strings.Join(pathItems, string(os.PathSeparator))
-
-					err = os.WriteFile(exportFilePath, data, 0644)
+					err = os.WriteFile(paths.Export, data, 0644)
 					if err != nil {
-						logger.Error("При записи ASTOR-отчета была получена ошибка!", zap.Error(err), zap.String("path", exportFilePath))
+						logger.Error("При записи ASTOR-отчета была получена ошибка!", zap.Error(err), zap.String("path", paths.Export))
 						continue
 					}
 
-					err = os.Remove(importPath.Path)
+					err = os.Remove(paths.Import)
 					if err != nil {
-						logger.Error("При удалении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", importPath.Path))
+						logger.Error("При удалении ATOL-отчета была получена ошибка!", zap.Error(err), zap.String("path", paths.Import))
 						continue
 					}
 					logger.Error("Отчет конвертирован и оригинал удален",
-						zap.String("original", importPath.Path), zap.String("converted", exportFilePath))
+						zap.String("original", paths.Import), zap.String("converted", paths.Export))
 				} else if errors.Is(err, os.ErrNotExist) {
-					logger.Error("Конвертация пропущена: отсутствует файл", zap.String("path", importPath.Path))
+					logger.Error("Конвертация пропущена: отсутствует файл", zap.String("path", paths.Import))
 				} else {
-					logger.Error("Конвертация пропущена: получена ошибка", zap.Error(err), zap.String("path", importPath.Path))
+					logger.Error("Конвертация пропущена: получена ошибка", zap.Error(err), zap.String("path", paths.Import))
 				}
 			}
 		case c := <-r:
