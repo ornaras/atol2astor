@@ -54,10 +54,7 @@ func installService() {
 		}
 	}()
 
-	var confService = mgr.Config{
-		StartType:   mgr.StartAutomatic,
-		DisplayName: "Конвертер ATOL2ASTOR",
-	}
+	var confService = mgr.Config{StartType: mgr.StartAutomatic}
 	if s, err = m.CreateService(nameService, appPath, confService, "-s"); err != nil {
 		logger.Error("Не удалось установить службу.", zap.Error(err))
 		fmt.Println("Не удалось установить службу.")
