@@ -51,6 +51,7 @@ func main() {
 			fmt.Println("1) Установка службы")
 			fmt.Println("2) Удаление службы")
 			fmt.Println("3) Открыть конфигурацию")
+			fmt.Println("4) Перейти в режим конфигуратора")
 			fmt.Println()
 			fmt.Print("Номер действия: ")
 			if _, err = fmt.Scanln(&input); err != nil {
@@ -61,12 +62,16 @@ func main() {
 			switch input {
 			case "1":
 				installService()
+				showConfigurator()
 				return
 			case "2":
 				uninstallService()
 				return
 			case "3":
 				openConfiguration()
+				return
+			case "4":
+				showConfigurator()
 				return
 			}
 		}
