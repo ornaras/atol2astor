@@ -33,6 +33,9 @@ func getExePath() (string, error) {
 }
 
 func copyFile(originPath, copyPath string) error {
+	if copyPath == originPath {
+		return nil
+	}
 	var data []byte
 	var err error
 
