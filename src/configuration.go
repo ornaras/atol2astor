@@ -69,3 +69,25 @@ func createDefaultConfiguration() *configuration {
 		},
 	}
 }
+
+func loadConfiguration() {
+	var err error
+	var file *os.File
+
+	file, err = os.Open(pathConfig)
+	if err != nil {
+		logger.Error("При открытии файла конфигурации произошла ошибка!", zap.Error(err))
+		panic(err)
+	}
+	defer func() {
+		if err := file.Close(); err != nil {
+			logger.Error("При закрытии файла конфигурации произошла ошибка!", zap.Error(err))
+		}
+	}()
+
+	err = xml.NewDecoder(file).Decode(&config)
+	if err != nil {
+		logger.Error("При переводе XML в конфигурацию произошла ошибка!", zap.Error(err))
+		panic(err)
+	}
+}

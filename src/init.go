@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/xml"
 	"flag"
 	"os"
 	"path"
@@ -55,21 +54,10 @@ func initFlags() {
 
 func initConfig() {
 	var err error
-	var file *os.File
 	if _, err = os.Stat(pathConfig); os.IsNotExist(err) {
 		config = createDefaultConfiguration()
 		config.save()
 	} else {
-		file, err = os.Open(_path)
-		if err != nil {
-			logger.Error("При открытии файла конфигурации произошла ошибка!", zap.Error(err))
-			panic(err)
-		}
-		defer file.Close()
-		err = xml.NewDecoder(file).Decode(&config)
-		if err != nil {
-			logger.Error("При переводе XML в конфигурацию произошла ошибка!", zap.Error(err))
-			panic(err)
-		}
+		loadConfiguration()
 	}
 }
