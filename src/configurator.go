@@ -15,12 +15,12 @@ var (
 
 	openDialogArgs = cfd.DialogConfig{
 		Title:       "Выберите путь загрузки файла обмена данных Frontol 6 в формате АТОЛ",
-		FileFilters: []cfd.FileFilter{{"Текстовый файл", "*.txt"}},
+		FileFilters: []cfd.FileFilter{{"Данные из Frontol 6", "*.txt"}},
 		Role:        "ImportFrontol6",
 	}
 	saveDialogArgs = cfd.DialogConfig{
 		Title:       "Выберите путь сохранения файла обмена данных Frontol 6 в формате АСТОР 1.3",
-		FileFilters: []cfd.FileFilter{{"Текстовый файл", "*.txt"}},
+		FileFilters: []cfd.FileFilter{{"Данные для АСТОР", "*.txt"}},
 		Role:        "ExportAstor1.3",
 	}
 )
