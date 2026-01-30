@@ -16,10 +16,12 @@ var (
 	openDialogArgs = cfd.DialogConfig{
 		Title:       "Выберите ATOL-отчет",
 		FileFilters: []cfd.FileFilter{{"Текстовый файл", "*.txt"}},
+		Role:        "ImportFrontol6",
 	}
 	saveDialogArgs = cfd.DialogConfig{
 		Title:       "Выберите путь для сохранения ASTOR-отчет",
 		FileFilters: []cfd.FileFilter{{"Текстовый файл", "*.txt"}},
+		Role:        "ExportAstor1.3",
 	}
 )
 
