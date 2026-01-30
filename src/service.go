@@ -38,7 +38,8 @@ loop:
 						if len(cells) < 16 {
 							continue
 						}
-						if cells[7] == "" {
+						if cells[3] != "1" && cells[3] != "2" && cells[3] != "4" &&
+							cells[3] != "11" && cells[3] != "12" && cells[3] != "14" {
 							continue
 						}
 						var temp = cells[7]
