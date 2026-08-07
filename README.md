@@ -1,63 +1,117 @@
-# ATOL-TO-ASTOR
+# Конвертер Z-отчёта Frontol 6 из ATOL-формата в формат ASTOR.
+ 
+ ![Затраченное время](https://wakatime.com/badge/user/cb1d81a4-cf38-4b2f-a98a-4e569f87e13b/project/003b082f-11c8-4bb0-a301-69d68883e898.svg)
+ ![Поддерживаемые ОС](https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0-Windows_7%2B-blue?logo=windows)
+ ![GitHub License](https://img.shields.io/github/license/ornaras/atol2astor?label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F)
+ ![Версия Go](https://img.shields.io/github/go-mod/go-version/kkm18-ru/zreport-atol2astor)
+ 
+## Что делает приложение
+ 
+`atol2astor` устанавливается как Windows-служба и с заданным интервалом проверяет наличие файлов отчётов Frontol 6. Если входной файл найден, приложение:
 
-Автоматический конвертер отчета Frontol 6 из формата Atol в формат ASTOR
+1. читает ATOL-отчёт из пути `import`;
+2. для строк с поддерживаемыми типами операций меняет местами поля 8 и 16;
+3. сохраняет результат в путь `export`;
+4. удаляет исходный файл `import` после успешной записи результата.
 
-![Затраченное время](https://waka.ornaras.ru/api/badge/ornaras/interval:week/project:atol2astor)
-![Поддерживаемые ОС](https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0-Windows_7%2B-blue?logo=windows)
-![GitHub License](https://img.shields.io/github/license/ornaras/atol2astor?label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F)
-![GitHub Downloads](https://img.shields.io/github/downloads/ornaras/atol2astor/total?label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D0%BD%D0%BE)
-![GitHub repo size](https://img.shields.io/github/repo-size/ornaras/atol2astor?label=%D0%A0%D0%B0%D0%B7%D0%BC%D0%B5%D1%80%20%D1%80%D0%B5%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D1%8F)
+## Расположение файлов
 
+После первого запуска приложение использует каталог:
+ 
+```text
+%PROGRAMDATA%\atol2astor
+ ```
+
+В нём находятся:
+
+- `atol2astor.exe` — копия исполняемого файла, которая запускается службой;
+- `config.xml` — конфигурация путей и интервала проверки;
+- `log.txt` — журнал работы приложения.
 
 ## Параметры запуска
 
-```
-C:\ProgramData\atol2astor>./atol2astor.exe -h
-Usage of atol2astor.exe:
-  -d    Запуск в режиме отладки
-  -s    Запуск в режиме сервиса
-```
+```text
+C:\ProgramData\atol2astor>atol2astor.exe -h
+ Usage of atol2astor.exe:
+   -d    Запуск в режиме отладки
+   -s    Запуск в режиме сервиса
+ ```
+ 
+Обычный запуск без параметров открывает консольное меню управления:
+ 
+```text
+Возможные действия:
+1) Установка службы
+2) Удаление службы
+3) Открыть конфигурацию
+4) Перейти в режим конфигуратора
 
-## Пример конфигурации
-
-> [!TIP]
-> Место расположения каталога с файлами приложения: `%PROGRAMDATA%\atol2astor`
-
-```xml
-<configuration>
-    <!--Тег 'interval' устанавливает интервал между проверками файлов в минутах-->
-    <interval>5</interval>
-    <!--В теге 'reports' хранятся пути к файлам конвертации-->
-    <!--Внимание! Не рекомендуется использовать несколько раз одну и ту же директорию.-->
-    <reports>
-        <report import="C:\atol1\import.txt" export="C:\atol1\export.txt"/>
-        <report import="C:\atol2\import.txt" export="C:\atol2\export.txt"/>
-    </reports>
-</configuration>
+Номер действия:
 ```
 
-## Порядок установки
-1) Скачать [последнюю версию](https://github.com/ornaras/atol2astor/releases/latest)
-2) Запустить от имени администратора
-3) В меню выбрать первый пункт:
-   ```batch
-   Возможные действия:
-   1) Установка службы
-   2) Удаление службы
-   3) Открыть конфигурацию
-   4) Перейти в режим конфигуратора
-   
-   Номер действия: 1
+## Конфигурация
+
+Пример `%PROGRAMDATA%\atol2astor\config.xml`:
+ 
+ ```xml
+ <configuration>
+     <!--Тег 'interval' устанавливает интервал между проверками файлов в минутах-->
+     <interval>5</interval>
+     <!--В теге 'reports' хранятся пути к файлам конвертации-->
+     <!--Внимание! Не рекомендуется использовать несколько раз одну и ту же директорию.-->
+     <reports>
+         <report import="C:\atol1\import.txt" export="C:\atol1\export.txt"/>
+         <report import="C:\atol2\import.txt" export="C:\atol2\export.txt"/>
+     </reports>
+ </configuration>
+ ```
+ 
+Поля конфигурации:
+
+| Поле | Описание |
+| --- | --- |
+| `interval` | Интервал проверки входных файлов в минутах. |
+| `report import` | Полный путь к ATOL-файлу, который нужно конвертировать. |
+| `report export` | Полный путь, куда будет записан файл в формате ASTOR. |
+
+> [!IMPORTANT]
+> Не используйте один и тот же файл для `import` и `export`: после успешной конвертации импорт-файл удаляется.
+
+## Установка
+
+1. Скачать [последнюю версию](https://github.com/kkm18-ru/zreport-atol2astor/releases/latest).
+2. Запустить `atol2astor.exe` __от имени администратора__.
+3. Выбрать пункт `1) Установка службы`.
+4. После установки заполнить конфигурацию через встроенный конфигуратор или вручную отредактировать `%PROGRAMDATA%\atol2astor\config.xml`.
+5. Проверить журнал `%PROGRAMDATA%\atol2astor\log.txt`, если служба не обрабатывает файлы.
+ 
+## Удаление
+
+1. Запустить `atol2astor.exe` от имени администратора.
+2. Выбрать пункт `2) Удаление службы`.
+
+## Сборка из исходного кода
+ 
+ > [!TIP]
+> Go 1.20.x является последней версией Go, поддерживающей сборку приложений для Windows 7 и выше.
+
+1. Установить [Go 1.20+](https://go.dev/dl/).
+2. Клонировать репозиторий:
+   ```bat
+   git clone https://github.com/kkm18-ru/zreport-atol2astor.git
+   cd zreport-atol2astor
+   ```
+3. Собрать Windows-версию из каталога репозитория:
+   ```bat
+   set GOARCH=386
+   set GOOS=windows
+   go build -ldflags="-s -w" -o atol2astor.exe ./src
    ```
 
-## Порядок сборки
+## Частые проблемы
 
-> [!TIP]
-> Go 1.20.x является последней версией поддерживающей сборку приложений для Windows 7 и выше
-
-1) Установить [Go 1.20+](https://go.dev/dl/)
-2) Клонировать репозиторий: `git clone https://github.com/ornaras/atol2astor.git`
-3) Настроить следующие переменные окружения:
-   - **GOARCH**: `386`
-   - **GOOS**: `windows`
-4) Запустить сборку приложения: `go build -ldflags="-s -w" .`
+- Служба не устанавливается:
+    - Запустите приложение от имени администратора.
+- Файл не конвертируется:
+    - Проверьте правильность путей в `config.xml`;
+    - Проверьте права доступа службы к этим каталогам.
